@@ -243,6 +243,7 @@ with open(filename, 'r') as infile:
 #       the program goes ahead with guessing a lower number next
 #   the guess is the same as the thought number, the user's answer is 'YES':
 #       stop the program
+# also, the program cannot return the same number again
 #########################################################
 # KNOWLEDGE LIST:
 # There are 10 numbers (from 1 to 10) that the user can think of (assuming only integers are allowed).
