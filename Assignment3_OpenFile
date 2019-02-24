@@ -1,0 +1,294 @@
+#!/usr/bin/env python3
+import math
+
+# 1. Write a program that reads the file ex1.acc and displays it on the screen.
+# The output should look like cat's output.
+
+"""with open('ex1.acc', 'r') as infile:
+    for line in infile:
+        print(line)
+
+# 2. Make the program ask for a filename (the input file in the following exercises), 
+# and display the file on the screen. A bit more like cat.
+
+filename = input("Please give a filename: ")
+with open(filename, 'r') as infile:
+    first = infile.readline()
+    if not first:
+        print ("The file is empty.")
+    else:      
+        print (first)  
+        for line in infile: 
+            print(line)
+
+# Comment: The method readline()reads one entire line from the file. A trailing newline character is kept in the string.
+
+# 3.Construct a program that counts the number of lines in the input file, and displays the result. 
+# Try it with the file ex1.dat. There are 1675 lines.
+
+print ("This program counts the number of lines in the input file.")
+filename = input("Please give a filename: ")
+with open(filename, 'r') as infile:
+    first = infile.readline()
+    if not first:
+        print ("The file is empty.")
+
+    else:
+        number = 1                  # since we already know that there is minimum one line in the file
+        for line in infile:
+            number += 1
+        print ("The number of lines of", filename, 'is',number)
+
+# 4. Construct three files from ex1.dat (using already learned UNIX techniques).
+# Each file should contain one column of numbers from ex1.dat. 
+# Now make a Python program that sums numbers from an input file and displays the sum of the numbers. 
+# Use the 3 files you constructed as input filers and see the sums. 
+# The sums are approx. Col 1; -904.4143, Col 2; 482.8410, Col 3; 292.05150 for the three columns.
+# cut -f1 ex1.dat  > column1.dat
+# cut -f2 ex1.dat  > column2.dat
+# cut -f3 ex1.dat  > column3.dat
+
+print ("This program displays the sum of the numbers from an input file.")
+filename = input("Please give a filename: ")
+with open(filename, 'r') as infile:
+    first = infile.readline()
+    if not first:
+        print ("The file is empty.")
+    
+    else:
+        sumoftheNumers = float(first)
+        for line in infile:
+            sumoftheNumers += float(line)
+        print("The sum of the numbers is: ", sumoftheNumers)
+
+# 5. Based on the previous program, now make a new one that calculates the mean value of the columns.
+# Also create a file with the numbers 9-1 and feed that to the program. 
+# What is the result from your program and what should it be, based on calculations in your head?
+
+print ("This program calculates the mean value of the lines in a file.")
+filename = input("Please give a filename: ")
+with open(filename, 'r') as infile:
+    first = infile.readline()
+    if not first:
+        print ("The file is empty.")
+
+    else:
+        numberofRows = 1
+        sumoftheNumers = float(first)
+        for line in infile:
+            sumoftheNumers += float(line)
+            numberofRows += 1
+        mean = sumoftheNumers / numberofRows
+        print("The mean value of the column of ", filename, "is", mean)
+# The program was tested on file containing numbers 1-9, it seems the program works fine, since the mean = 5.0.
+
+# 6. Now make a program (perhaps based on the previous one) that counts the number of positive and negative
+# numbers in an input file. Also count the zeroes in the column, if there are any. Display the result.
+
+print ("This program calculates the number of positive and negative numbers in an input file.")
+filename = input("Please give a filename: ")
+with open(filename, 'r') as infile:
+    first = infile.readline()
+    if not first:
+        print ("The file is empty.")
+
+    else:
+        if float(first) > 0:
+            positiveNumbers = 1
+            negativeNumers = 0
+            zeros = 0
+
+        if float(first) == 0:
+            zeros = 1
+            positiveNumbers = 0
+            negativeNumers = 0
+
+        if float(first) < 0:
+            negativeNumers = 1
+            positiveNumbers = 0
+            zeros = 0
+
+        for line in infile:
+            if float(line) == 0:
+                zeros += 1
+            if float(line) > 0:
+                positiveNumbers += 1
+            if float(line) < 0:
+                negativeNumers += 1
+
+        print ("There are ", zeros, "zero values in the file ", filename, ".")
+        print ("There are ", positiveNumbers, "positive values in file ", filename, ".")
+        print ("There are ", negativeNumers, "negative values in file ", filename, ".")
+
+# 7. Now make a program (perhaps based on the previous one) that finds the maximum number in a column.
+# Display the result. Also upload for Peer evaluation.
+
+print ("This program returns the maximum value of the column of an input file.")
+filename = input("Please give a filename: ")
+
+with open(filename, 'r') as infile:
+    # check if the file is empty, if yes -> error message
+    first = infile.readline()                                   
+    if not first:
+        print ("The file ", filename, "is empty.")
+
+    # if a non-empty file was given, iterate over the lines and always store the higher number
+    else:
+        storeMax = float(first)                         
+        for line in infile:            
+            if float(line) >= storeMax:
+                storeMax = float(line)
+        
+        # print the result
+        print ("The maxium value of the column in file ", filename, "is ", storeMax, ".")
+
+
+# 8. Now make a program that finds the minimum number in a column and display the result.
+                                                                            # here I try to write a pseudocode:    
+print("This program returns to the minumum number in a column in a file.")  # print the aim of the program
+filename = input("Please give a filename: ")                                # ask filename from the user
+with open(filename, 'r') as infile:                                         # open file as infile
+    first = infile.readline()                                                   # within the file investigate if the file is empty by checking the value of the first line -> it is going to be a string
+    if not first:                                                               # if first line cannot be found
+        print ("The file ", filename, "is empty.")                                  # print error message
+
+    else:                                                                       # if the file is not empty
+        if first == '\n':                                                           # is the first line a new line? (I created a test file with an empty first line but not a totally blank file to check what was going to happen..)
+            storeMin = None                                                             # if yes, storeMin be a Nontype (because there is no other type here to assign the storeMin)
+
+        else:                                                                       # if not
+            storeMin = float(first)                                                     # be storeMin the first element as a float
+            
+        for line in infile:                                                         # iterating over the lines (from second item, since the first has already been read.)
+            if storeMin is None:                                                        # if the first line was empty
+                storeMin = float(line)                                                      # be storeMin the second item (line)
+
+            if float(line) <= storeMin:                                             # if the value of the given line is less than or equal to storeMin
+                storeMin = float(line)                                                  # store this number as storeMin
+        
+        # print the result
+        print ("The minimum value of the column in file ", filename, "is ", storeMin, ".")
+                                                                                    # then print the result
+
+# 9. It begins to get trivial. Now make a program that does all of the above, that is;
+# calculate the sum, the number of lines, the mean value, the number of positive, negative and zero numbers,
+# the maximum and the minimum value. You can only read the file once.
+# Display the all results clearly so there is no doubt about what you display.
+
+print ("This program performs different kinds of calculations with lines of a column in a file.")
+filename = input("To get the values of the calculations, please type a filename here: ")
+with open(filename, 'r') as infile:
+    # check if the file is empty and print error message
+    first = infile.readline()
+    if not first:
+        print("It is unfortunately an empty file :(.")
+    
+    # otherwise perform the calculations
+    else:
+        sumoftheNumers = float(first)               # to calculate the sum
+        numberofRows = 1                            # to calculate the nmbr of rows
+        if float(first) > 0:                        # to calculate the positive numbers 
+            positiveNumbers = 1
+            negativeNumers = 0
+            zeros = 0
+
+        if float(first) == 0:                       # to calculate the zero values
+            zeros = 1
+            positiveNumbers = 0
+            negativeNumers = 0
+
+        if float(first) < 0:                        # to calculate the neagtive numbers 
+            negativeNumers = 1
+            positiveNumbers = 0
+            zeros = 0
+
+        storeMax = float(first)                     # to take the maximum value
+        storeMin = float(first)                     # to take the minimum value
+
+        # iterate over the lines and increase the variables
+        for line in infile:                    
+            sumoftheNumers += float(line)           
+            numberofRows += 1                       
+            if float(line) == 0:                    # the nmbr of zeros
+                zeros += 1
+            if float(line) > 0:                     # the nmbr of positives
+                positiveNumbers += 1
+            if float(line) < 0:                     # the nmbr of negatives
+                negativeNumers += 1      
+            if float(line) >= storeMax:             # the max
+                storeMax = float(line)
+            if float(line) <= storeMin:             # the min                                        
+                storeMin = float(line)
+        
+        mean = sumoftheNumers / numberofRows        
+
+        print("The sum of the numbers is :", sumoftheNumers, ".")
+        print ("The number of lines is: ", numberofRows, ".")
+        print("The mean value of the column is: ", mean)
+        print ("There are ", zeros, "zero values.")
+        print ("There are ", positiveNumbers, "positive values.")
+        print ("There are ", negativeNumers, "negative values.")
+        print ("The maxium value of the column is: ", storeMax, ".")
+        print ("The minimum value of the column is: ", storeMin, ".")"""
+
+# 10. 
+#########################################################
+# TODOLIST: 
+# ask the user to think of a number btw 1-10
+# the program guess first
+# the program keeps guessing as long as :
+#   the though number is 'HIGHER' than the guess:
+#       the program goes ahead with guessing a higer number in the next round
+#   the thought number is 'LOWER' than the guess:
+#       the program goes ahead with guessing a lower number next
+#   the guess is the same as the thought number, the user's answer is 'YES':
+#       stop the program
+#########################################################
+# KNOWLEDGE LIST:
+# There are 10 numbers (from 1 to 10) that the user can think of (assuming only integers are allowed).
+# Be the thought number x
+# To minimize the steps of guessing and make the program faster the guesses are not random 
+#   but always starts from around the median of the possible guessing interval.
+
+print ("")
+print ("Dear User, let's play a game!")
+print ("")
+print ("The Game: Think of a whole number between 1 and 10 and the program will find it out!")
+print ("")
+print ("But you need to help the program and drive it by a couple of simple rules:")
+print ("- If the guess is correct, type: 'yes', so the program stops :(. Don't be sad, you can run it again to play more :).")
+print ("- If your number is higher than the guess of the program, type: 'higher'.")
+print ("- If your number is lower than the guess of the program, type: 'lower'.")
+print ("- The program only asks once for every number. Take care of the correctness of your answer!")
+print ("- I don't recommend that you cheat! ;)")
+print ("")
+print ("Now, if you have the number and feel ready, press ENTER to start. Have a nice game!")
+print ("")
+print ("")
+
+answer = "no"
+lowerBound = 0
+upperBound = 11
+error = False
+
+while answer != "yes" and not error:
+    guess = math.floor((lowerBound + upperBound) / 2)
+    answer = input("Is it the " + str(guess) + " that you thought of?: ")
+    if answer == "higher":
+        if upperBound - 1 <= guess:
+            error = True
+        else:
+            lowerBound = guess
+
+    if answer == "lower":
+        if lowerBound + 1 >= guess:
+            error = True
+        else:
+            upperBound = guess
+
+if not error:
+    print ("I caught you! ;) Your number was ", guess, "!.")
+else:
+    print ("Error!")
+
+

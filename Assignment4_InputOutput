@@ -1,0 +1,440 @@
+#!/usr/bin/env python3
+
+import sys
+import os
+import math
+
+
+# 1. Make a program that asks for two numbers (integers), and calculates the mean (average) of those numbers.
+# The mean must be converted to an integer. Displays result along with input numbers.
+
+print("This program calculates the mean of two numbers.")                           # aim of the program
+numbers = input(print("Please give two whole numbers (like: 2,4):", end=" "))       # ask for two inetegers
+
+firstNumber = numbers[0]                                                            # extract the first number from input
+secondNumber = numbers[2]                                                           # extract the second number from input
+mean = (int(firstNumber) + int(secondNumber)) / 2                                   # mean calculation
+
+# print the result
+print ("The mean of", firstNumber, "and", secondNumber, "is", int(mean), sep=' ', end=".\n")
+
+
+# 2. Create a new file that contains two integers (one integer per line) - using an editor is fine for this.
+#  Remake the program from exercise nr 1, in the way that two numbers are read from STDIN (instead asking
+#  for user input as in ex nr 1).
+#  From the terminal feed the file to your program using already learned unix techniques.
+
+print("This program calculates the mean of two numbers.")   # aim of the program
+numbers = sys.stdin                                         # ask for two inetegers
+listOfValues = []                                           # blank list for collecting values of the input file
+# store every value in the lines in a list
+for line in numbers:
+    listOfValues.append(int(line))
+
+sumOfTheElements = sum(listOfValues)                        # sum of the values in input file
+listValuesLength = len(listOfValues)                        # length of the list containing the values of the input file
+mean = (sumOfTheElements / listValuesLength)                # mean calculation
+numbers.close()                                             # colse the door
+
+# print the result
+print ("The mean of", listOfValues[0], "and", listOfValues[1], "is", int(mean), sep=' ', end=".\n")
+
+# feeding the test file from the terminal by:
+# ./Assignment5_InputOutput < testIntegers 
+
+
+# 3. Write a program that counts the number of negative numbers in ex1.dat file. Display the result.
+
+dataFile = open("ex1.dat", "r")
+listOfNegatives = []
+
+for line in dataFile:
+    for char in line.split():
+        if float(char) < 0:
+            listOfNegatives.append(float(char))
+
+numberOfNegatives = len(listOfNegatives)
+print("The number of negative numbers in file ex1.dat is", numberOfNegatives, sep=" ", end=".\n")
+dataFile.close()
+        
+
+# 4. Write a program that converts temperatures from Fahrenheit to Celsius or visa versa given input
+#  like "36F" of "15C" ( F = (C * 9/5) + 32 ).
+
+print("This program converts temperature from Fahrenheit to Celsius or visa versa.")
+temperatureAndUnit = input("Please type the temperature and its unit from you would like to convert (expl.: '36F' or '15C'):\n")
+
+unitFrom = temperatureAndUnit[-1]                   # extract the temperature unit from the input
+temperature = int(temperatureAndUnit[:-1])          # extract the value of temp. from input
+
+if unitFrom is "F":                                 # convert from Fahrenheit to Celsius
+    newTempriture = (temperature - 32) / 1.8
+    unitTo = "Celsius"
+
+if unitFrom is "C":                               # convert from Celsius to Fahrenheit
+    newTempriture = (temperature * 1.8) + 32
+    unitTo = "Fahrenheit"
+
+print(temperatureAndUnit, 'is', newTempriture, unitTo, sep=' ', end='.\n')
+
+
+# 5. Read the file orphans.sp and find all accession numbers, save them in another file of your choosing.
+#  Hint: an accession number might look like this AB000114.CDS.1. Consider .CDS.1 as a part of the accession
+#  number. Accession numbers differ in length for historical reasons.
+#  You can assume that the accession number comes straight after the >, which is first on the line
+
+dataSource = open("orphans.sp", "r")
+AccessionNumbersOutput = open("accession-numbers-orphans", "w+")    # creat output file (by '+')
+
+for line in dataSource:                                             
+    for char in line:
+        if char[0] is ">":
+            listOfTheCharacters = line.split()
+            accessionNumber = listOfTheCharacters[0][1:]+'\n'       
+            AccessionNumbersOutput.write(accessionNumber)
+
+dataSource.close()
+AccessionNumbersOutput.close()
+
+
+# 6. Make a new program thats ask for two filenames, one at a time. It should then display the merged lines 
+# from both files, i.e. the first line from the first file concatenated (with tab) with the first line 
+# from the second file, and so forth. The output should be like that of the UNIX command paste.
+# Try with the files ex1.acc and ex1.dat and compare with the same UNIX paste command, exercise 1.14. 
+# It should be the same. Notice that this is a purple exercise; You have make the pseudo code first and hand
+# it in as part of the exercise.
+
+#### pseudocode starts ####
+# inform the user about the purpose of the program
+
+# ask for a filename from the user
+# ask for the second filename from the user
+
+# open file one for reading
+# open file two for reading
+# create an output file with permission for writing
+
+# for each line of file one:
+#   store the line as a string
+#   for the same number of line of file two:
+#       store the line as another string
+#       concatenate the two stings with tab
+#   print out the concatenated lines in output file          
+
+# close file one
+# close file two
+# close output file
+#### pseudocode ends ####
+
+purpose = print("This program merges two input files by putting their columns side by side.")
+
+inputOne = input(print("Please give a filename:"))
+inputTwo = input(print("Please give the second filename:"))
+
+fileOne = open(inputOne, 'r')
+fileTwo = open(inputTwo, 'r')
+mergedFile = open('merged.file', 'w')
+
+for line in fileOne:                
+    lineFileOne = line.strip()                  # strip for cutting down the new line from the end     
+    for line in fileTwo:            
+        lineFileTwo = line.strip()
+    newLine = lineFileOne + "\t" + lineFileTwo
+    print(newLine, file=mergedFile)
+
+fileOne.close()
+fileTwo.close()
+mergedFile.close()
+
+
+# 7. This and the following exercise aims to make the reverse complement string (called "complement strand")
+#  of DNA. There is some human DNA in dna.dat file. Read the file and put all the DNA in one variable.
+#  Now complement the DNA and store it in other variable. Display and ensure that it works.
+#  HINT: Complementing means changing all A's to T's, T's to A's, C's to G's and G's to C's.
+
+# KNOWLEDGE & PLAN:
+# - while the file is open: every line will be assigned to separate variables
+# - a DNA strand is a list of characters
+# - the characthers of the list are supposed to be converted by base pair rules
+# - result (complement DNA strands) should be store in new variables and displayed
+
+DNAFile = open("dna.dat", "r")
+
+originalDNA = ""    # collect the characters of the original DNA strand
+complementDNA = ""  # blank string for collecting the characters of the complement DNA
+
+adenin = "A"        # name the bases
+citozin = "C"
+timin = "T"
+guanin = "G"
+
+for strand in DNAFile:          # create a list about the bases of each DNA
+    for base in strand:
+        originalDNA += base
+
+for base in originalDNA:        # convert original DNA into complement DNA
+    if base is adenin:
+        base = timin
+
+    elif base is timin:
+        base = adenin
+
+    elif base is guanin:
+        base = citozin
+
+    elif base is citozin:
+        base = guanin
+    
+    complementDNA += base
+    
+print(complementDNA)            # display the results
+
+DNAFile.close()
+
+
+# 8. Now reverse the DNA after complementing it. Reverse means last letter (base) should be the first,
+#  next to last should be the second, and so forth. Display.
+
+DNAFile = open("dna.dat", "r")
+
+originalDNA = ""    # collect the characters of the original DNA strand
+complementDNA = ""  # blank string for collecting the characters of the complement DNA
+reverseDNA = ""
+
+adenin = "A"        # name the bases
+citozin = "C"
+timin = "T"
+guanin = "G"
+
+for strand in DNAFile:          # create a list about the bases of each DNA
+    for base in strand:
+        originalDNA += base     # containing new lines
+
+for base in originalDNA:        # convert original DNA into complement DNA
+    if base is adenin:
+        base = timin
+
+    elif base is timin:
+        base = adenin
+
+    elif base is guanin:
+        base = citozin
+
+    elif base is citozin:
+        base = guanin
+    
+    complementDNA += base
+
+listOfStrands = complementDNA.split(sep='\n')      # make a list of complement DNA strands
+for strand in listOfStrands:                       # make the reverse strands
+    for base in range(len(strand)-1, -1, -1):      # put the bases in reverse order
+        reverseDNA += strand[base]
+    reverseDNA += '\n'
+
+print(reverseDNA)                                  # display the results
+
+DNAFile.close()
+
+
+# 9. Now write the DNA in the file revdna.dat. Make it look nice, just like dna.dat, i.e. 60 letters per line.
+# This does NOT mean that you should insert newlines in the variable containing your complement strand
+# (contamination of clean data you possibly should use later in the program). It just means that DNA in
+# the output file must have 60 chars per line, just as in the input file.
+
+DNAFile = open("dna.dat", "r")
+reverseComplementDNAFile = open("reverse_complement_dna.dat", "w")
+
+originalDNA = ""    # collect the characters of the original DNA strand
+complementDNA = ""  # blank string for collecting the characters of the complement DNA
+reverseDNA = ""
+
+adenin = "A"        # name the bases
+citozin = "C"
+timin = "T"
+guanin = "G"
+
+lengthOfStrand = 0
+outputLines = []                # list for collecting the lines for output  
+
+for strand in DNAFile:          # create a list about the bases of each DNA
+    if lengthOfStrand == 0:     # measure the length of line (first line) (-1 for excluding the newline)
+        lengthOfStrand = len(strand)-1
+    for base in strand:
+        originalDNA += base     # containing new lines
+
+for base in originalDNA:        # convert original DNA into complement DNA
+    if base is adenin:
+        base = timin
+
+    elif base is timin:
+        base = adenin
+
+    elif base is guanin:
+        base = citozin
+
+    elif base is citozin:
+        base = guanin
+    
+    complementDNA += base
+
+listOfStrands = complementDNA.split(sep='\n')      # make a list of complement DNA strands
+for strand in listOfStrands:                       # make the reverse strands
+    for base in range(len(strand)-1, -1, -1):      # put the bases in reverse order
+        reverseDNA += strand[base]
+                                                           
+
+while len(reverseDNA) >= lengthOfStrand:           # collect the new lines for output
+    outputLines.append(reverseDNA[0:lengthOfStrand])
+    reverseDNA = reverseDNA[lengthOfStrand:]
+
+outputLines.append(reverseDNA)
+
+for line in outputLines:                           # create output file
+    reverseComplementDNAFile.write(line + '\n')
+
+
+DNAFile.close()
+reverseComplementDNAFile.close()
+
+
+# 10. In the file dna.fsa is the same human DNA in FASTA format. This format is VERY often used in
+# bioinformatics. Look at it using less and get used to the format. Observe the first line which 
+# starts with a > and identifies the sequence. The name (AB000410 in this case) MUST uniquely identify
+# a sequence in the file. This is a DNA (actually mRNA) sequence taken from the GenBank database. 
+# Now make a program that reverse complements the sequence and writes it into the file revdna.fsa just
+# like you did in previous assignments. This time you have to keep the first identifying line,
+# so the sequence can be identified. You must add 'ComplementStrand' in the end of that line, 
+# though, so you later know that it is the complement strand.
+
+DNAFile = open("dna.fsa", "r")
+mRNAFile = open("mRNA.dat", "w")
+
+originalDNA = ""    # collect the characters of the original DNA strand
+complementDNA = ""  # blank string for collecting the characters of the complement DNA
+reverseDNA = ""
+
+adenin = "A"        # name the bases
+citozin = "C"
+timin = "T"
+guanin = "G"
+
+lengthOfStrand = 0
+outputLines = []                # list for collecting the lines for output  
+
+identifier = None               # stands for sequence identifier (header)
+
+for strand in DNAFile:              # create a list about the bases of each DNA
+    if identifier is None:          # take the first line as sequence identifier
+        identifier = strand
+
+    elif lengthOfStrand == 0:       # measure the length of line (second line line) (-1 for excluding the newline)
+        lengthOfStrand = len(strand)-1
+        for base in strand:
+            originalDNA += base     # containing new lines
+
+    else:
+        for base in strand:
+            originalDNA += base     # containing new lines
+
+for base in originalDNA:            # convert original DNA into complement DNA
+    if base is adenin:
+        base = timin
+
+    elif base is timin:
+        base = adenin
+
+    elif base is guanin:
+        base = citozin
+
+    elif base is citozin:
+        base = guanin
+    
+    complementDNA += base
+
+listOfStrands = complementDNA.split(sep='\n')      # make a list of complement DNA strands
+for strand in listOfStrands:                       # make the reverse strands
+    for base in range(len(strand)-1, -1, -1):      # put the bases in reverse order
+        reverseDNA += strand[base]
+
+outputLines.append(identifier.strip() + " ComplementStrand")    # create new header for output file                                                   
+
+while len(reverseDNA) >= lengthOfStrand:           # collect the new lines for output
+    outputLines.append(reverseDNA[0:lengthOfStrand])
+    reverseDNA = reverseDNA[lengthOfStrand:]
+
+outputLines.append(reverseDNA)
+
+for line in outputLines:                           # create output file
+    mRNAFile.write(line + '\n')
+
+
+DNAFile.close()
+mRNAFile.close()
+
+# 11. Now you must analyse the AT/GC content of the DNA in the file dna.fsa. 
+# You must count all A, T, C and G, and display the result.
+
+DNAfsaFile = open("dna.fsa", "r")
+
+adenin = 0                          # counter for bases
+citozin = 0
+timin = 0
+guanin = 0
+
+baseSequence = ""
+header = None                  
+
+line = DNAfsaFile.readline()
+while line != "":                   # make a string containing all bases in the DNA
+    if header is None:              # eliminate sequence identifier/header
+        header = line
+    else:    
+        baseSequence += line.strip()
+    line = DNAfsaFile.readline()   
+
+for base in baseSequence:           # count the bases
+    if base is "A":
+        adenin += 1
+
+    elif base is "T":
+        timin += 1
+
+    elif base is "G":
+        guanin += 1
+
+    elif base is "C":
+        citozin += 1
+
+print("The base content of input sequence:\n", "Adenin:", adenin, '\n' , "Timin:", timin, '\n', "Guanin:", guanin, '\n', "Citozin:", citozin, '\n')
+
+
+# 12. Write a program that prints a "bulls-eye" to STDOUT using characters like; '.', '+', '*', '#', etc.
+# You have to import the math library, in order to access the squareroot (sqrt), sine (sin), cosine (cos),
+# and so forth functions. The square root of x is gotten like math.sqrt(x). 
+# I only used: for, if, elif, print, +, -, /, **, int, sqrt for this 40x40 example.
+
+bullsEyeFile = open("bullsEye", "w")
+
+height = 40
+width = 80
+canvas = [[' ' for x in range(width)] for y in range(height)]   # creating list comprehension (https://stackoverflow.com/questions/6667201/how-to-define-a-two-dimensional-array-in-python)
+origoX = 40
+origoY = 20
+aspectRatioFix = 3.5
+
+for x in range(width):
+    for y in range(height):
+        if math.sqrt(((x-origoX)**2)/aspectRatioFix + (y-origoY)**2) <= 18:
+            canvas[y][x] = "+"
+        
+        if math.sqrt(((x-origoX)**2)/aspectRatioFix + (y-origoY)**2) <= 12:
+            canvas[y][x] = "."
+
+        if math.sqrt(((x-origoX)**2)/aspectRatioFix + (y-origoY)**2) <= 6:
+            canvas[y][x] = "#"
+
+
+for line in canvas:
+    print(''.join(line), file=bullsEyeFile)
+
+bullsEyeFile.close()
