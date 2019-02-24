@@ -371,6 +371,7 @@ for line in outputLines:                           # create output file
 DNAFile.close()
 mRNAFile.close()
 
+
 # 11. Now you must analyse the AT/GC content of the DNA in the file dna.fsa. 
 # You must count all A, T, C and G, and display the result.
 
